@@ -4,9 +4,10 @@ import {
   Text,
   View,
   TextInput,
-  Picker,
+  PickerIOS,
   ScrollView
 } from "react-native";
+import ModalSelector from "react-native-modal-selector";
 import firebase from "firebase";
 import hash from "object-hash";
 
@@ -74,82 +75,74 @@ export default class App extends React.Component {
 
   render() {
     console.log(this.state);
+    const ages = [
+      { key: 0, label: "Toddler" },
+      { key: 1, label: "School" },
+      { key: 2, label: "Adolescent" },
+      { key: 3, label: "Early" },
+      { key: 4, label: "Mid" },
+      { key: 5, label: "Late" }
+    ];
+    const sexes = [
+      { key: 0, label: "Male" },
+      { key: 1, label: "Female" },
+      { key: 2, label: "Other" }
+    ];
+    const commands = [{ key: 0, label: "Yes" }, { key: 1, label: "No" }];
+
     return (
       <ScrollView>
         <View style={styles.container}>
-          <Picker
-            selectedValue={this.state.followCommand}
-            style={{ height: 40, width: 100 }}
-            prompt="Age"
-            onValueChange={(itemValue, itemIndex) =>
-              this.setState({ age: itemValue })}
-          >
-            <Picker.Item label="Toddler" value="toddler" />
-            <Picker.Item label="School" value="school" />
-            <Picker.Item label="Adolescent" value="adolescent" />
-            <Picker.Item label="Early Adult" value="early" />
-            <Picker.Item label="Mid Adult" value="mid" />
-            <Picker.Item label="Late Adult" value="late" />
-          </Picker>
+          <ModalSelector
+            data={ages}
+            initValue="Age"
+            onChange={option =>
+              this.setState({ age: option.label.toLowerCase() })}
+          />
 
-          <Picker
-            selectedValue={this.state.followCommand}
-            style={{ height: 40, width: 100 }}
-            prompt="Sex"
-            onValueChange={(itemValue, itemIndex) =>
-              this.setState({ sex: itemValue })}
-          >
-            <Picker.Item label="Male" value="male" />
-            <Picker.Item label="Female" value="female" />
-            <Picker.Item label="Other" value="other" />
-          </Picker>
+          <ModalSelector
+            data={sexes}
+            initValue="Sex"
+            onChange={option =>
+              this.setState({ sex: option.label.toLowerCase() })}
+          />
 
           <TextInput
-            style={{ height: 40 }}
             placeholder="Primary impression"
             onChangeText={text => this.setState({ primaryImpression: text })}
           />
 
           <TextInput
-            style={{ height: 40 }}
             placeholder="Primary symptom"
             onChangeText={text => this.setState({ primarySymptom: text })}
           />
 
           <TextInput
-            style={{ height: 40 }}
             keyboardType="number-pad"
             placeholder="RR"
             onChangeText={text => this.setState({ rr: text })}
           />
 
           <TextInput
-            style={{ height: 40 }}
             keyboardType="number-pad"
             placeholder="Pulse"
             onChangeText={text => this.setState({ pulse: text })}
           />
 
           <TextInput
-            style={{ height: 40 }}
             keyboardType="number-pad"
             placeholder="Capillary refill"
             onChangeText={text => this.setState({ capRefill: text })}
           />
 
-          <Picker
-            selectedValue={this.state.followCommand}
-            style={{ height: 40, width: 100 }}
-            prompt="Follows command?"
-            onValueChange={(itemValue, itemIndex) =>
-              this.setState({ followCommand: itemValue })}
-          >
-            <Picker.Item label="Yes" value="true" />
-            <Picker.Item label="No" value="false" />
-          </Picker>
+          <ModalSelector
+            data={commands}
+            initValue="Follows commands?"
+            onChange={option =>
+              this.setState({ followCommand: option.label.toLowerCase() })}
+          />
 
           <TextInput
-            style={{ height: 40 }}
             placeholder="Patient Name"
             onChangeText={text => this.setState({ name: text })}
           />
@@ -163,7 +156,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
