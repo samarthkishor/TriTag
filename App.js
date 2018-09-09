@@ -6,7 +6,8 @@ import {
   TextInput,
   PickerIOS,
   ScrollView,
-  Button
+  Button,
+  Alert
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
 import firebase from "firebase";
@@ -60,7 +61,18 @@ export default class App extends React.Component {
    * Add patient data to the database
    */
   setData(patient) {
+    this.setState({
+      score: this.calcSeverity(
+        patient.age,
+        patient.pulse,
+        patient.rr,
+        patient.capRefill,
+        patient.primaryImpression
+      )
+    });
+
     return new Promise((resolve, reject) => {
+      console.log("score:", this.state.score);
       firebase
         .database()
         .ref("patients/" + this.generateID(patient))
@@ -74,12 +86,131 @@ export default class App extends React.Component {
           capRefill: patient.capRefill,
           followCommand: patient.followCommand,
           name: patient.name,
-          score: patient.score,
+          score: this.calcSeverity(
+            patient.age,
+            patient.pulse,
+            patient.rr,
+            patient.capRefill,
+            patient.primaryImpression
+          ),
           ambulance: patient.ambulance
         })
         .then(resolve(patient))
         .catch(err => reject(err));
     });
+  }
+
+  /**
+   * Calculate a severity score between 0.00 and 1.00 for a patient
+   */
+  calcSeverity(ageGroup, pulse, respRate, capRefill, primaryImpression) {
+    const dataframe = [
+      { pulse: 0.35, respRate: 0.5, capRefill: 0.15 },
+      { pulse: 0.4, respRate: 0.5, capRefill: 0.1 },
+      { pulse: 0.45, respRate: 0.5, capRefill: 0.05 },
+      { pulse: 0.45, respRate: 0.5, capRefill: 0.05 },
+      { pulse: 0.45, respRate: 0.5, capRefill: 0.05 },
+      { pulse: 0.45, respRate: 0.5, capRefill: 0.05 }
+    ];
+    const expected_vals_df = [
+      { pulse: 105, respRate: 25, capRefill: 2 },
+      { pulse: 90, respRate: 25, capRefill: 2 },
+      { pulse: 80, respRate: 16, capRefill: 2 },
+      { pulse: 70, respRate: 18, capRefill: 2 },
+      { pulse: 70, respRate: 18, capRefill: 2 },
+      { pulse: 70, respRate: 18, capRefill: 2 }
+    ];
+
+    var severity;
+    var weights;
+    var expected_vals;
+
+    switch (ageGroup) {
+      case "toddler":
+        weights = dataframe[0];
+        expected_vals = expected_vals_df[0];
+        break;
+      case "school":
+        weights = dataframe[1];
+        expected_vals = expected_vals_df[1];
+        break;
+      case "adolescent":
+        weights = dataframe[2];
+        expected_vals = expected_vals_df[2];
+        break;
+      case "early":
+        weights = dataframe[3];
+        expected_vals = expected_vals_df[3];
+        break;
+      case "mid":
+        weights = dataframe[4];
+        expected_vals = expected_vals_df[4];
+        break;
+      case "late":
+        weights = dataframe[5];
+        expected_vals = expected_vals_df[5];
+        break;
+      default:
+        return 0.0;
+    }
+
+    // initial severity
+    severity =
+      Math.abs(
+        (respRate - expected_vals.respRate) /
+          ((respRate + expected_vals.respRate) / 2)
+      ) *
+        weights.respRate +
+      Math.abs(
+        (pulse - expected_vals.pulse) / ((pulse + expected_vals.pulse) / 2)
+      ) *
+        weights.pulse +
+      Math.abs(
+        (capRefill - expected_vals.capRefill) /
+          ((capRefill + expected_vals.capRefill) / 2)
+      ) *
+        weights.capRefill;
+
+    switch (primaryImpression) {
+      case "Abdominal pain/problems":
+        severity += 0.01;
+        break;
+      case "Airway Issues":
+        severity += 0.15;
+        break;
+      case "Altered level of consciousness":
+        severity += 0.2;
+        break;
+      case "Behavioral/psychiatric disorder":
+        severity += 0.01;
+        break;
+      case "Cardiac Issues":
+        severity += 0.15;
+        break;
+      case "Obvious death":
+        severity = 1;
+        break;
+      case "Poisoning/drug ingestion":
+        severity += 0.01;
+        break;
+      case "Syncope/fainting":
+        severity += 0.025;
+        break;
+      case "Traumatic injury":
+        severity += 0.025;
+        break;
+      case "Not applicable":
+        break;
+      case "Not known":
+        break;
+      default:
+        return 0.0;
+    }
+    // bound under 1
+
+    if (severity > 1) severity = 1; // dead
+
+    return Number.parseFloat(severity).toPrecision(2);
   }
 
   render() {
@@ -225,9 +356,19 @@ export default class App extends React.Component {
           </View>
 
           <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Ambulance</Text>
+            <TextInput
+              placeholder="Ambulance"
+              value={this.state.ambulance.toString()}
+              onChangeText={text => this.setState({ ambulance: text })}
+            />
+          </View>
+
+          <View style={styles.container}>
             <Button
-              onPress={() =>
-                this.setData(this.state).then(
+              onPress={() => {
+                this.setData(this.state).then(() => {
+                  Alert.alert("Severity Score:", this.state.score);
                   this.setState({
                     age: "",
                     sex: "",
@@ -240,8 +381,9 @@ export default class App extends React.Component {
                     name: "",
                     score: 0.0,
                     ambulance: ""
-                  })
-                )}
+                  });
+                });
+              }}
               title="Submit"
               color="red"
             />
@@ -259,6 +401,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     margin: 10,
-    padding: 15
+    padding: 10
   }
 });
