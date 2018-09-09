@@ -284,7 +284,7 @@ export default class App extends React.Component {
           </View>
 
           <View style={styles.container}>
-            <Text style={{ paddingBottom: 10 }}>Primary impression</Text>
+            <Text style={{ paddingBottom: 10 }}>Primary Impression</Text>
             <ModalSelector
               data={primaryImpressions}
               initValue="select primary impression"
@@ -385,7 +385,7 @@ export default class App extends React.Component {
                 });
               }}
               title="Submit"
-              color="red"
+              color="green"
             />
           </View>
         </View>
