@@ -5,7 +5,8 @@ import {
   View,
   TextInput,
   PickerIOS,
-  ScrollView
+  ScrollView,
+  Button
 } from "react-native";
 import ModalSelector from "react-native-modal-selector";
 import firebase from "firebase";
@@ -54,7 +55,7 @@ export default class App extends React.Component {
     return new Promise((resolve, reject) => {
       firebase
         .database()
-        .ref("patients/" + generateID(patient))
+        .ref("patients/" + this.generateID(patient))
         .set({
           age: patient.age,
           sex: patient.sex,
@@ -71,6 +72,11 @@ export default class App extends React.Component {
         .then(resolve(patient))
         .catch(err => reject(err));
     });
+  }
+
+  ree(patient) {
+    console.log(patient);
+    console.log("reeee");
   }
 
   render() {
@@ -93,59 +99,88 @@ export default class App extends React.Component {
     return (
       <ScrollView>
         <View style={styles.container}>
-          <ModalSelector
-            data={ages}
-            initValue="Age"
-            onChange={option =>
-              this.setState({ age: option.label.toLowerCase() })}
-          />
+          <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Age</Text>
+            <ModalSelector
+              data={ages}
+              initValue="select age"
+              onChange={option =>
+                this.setState({ age: option.label.toLowerCase() })}
+            />
+          </View>
 
-          <ModalSelector
-            data={sexes}
-            initValue="Sex"
-            onChange={option =>
-              this.setState({ sex: option.label.toLowerCase() })}
-          />
+          <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Sex</Text>
+            <ModalSelector
+              data={sexes}
+              initValue="select sex"
+              onChange={option =>
+                this.setState({ sex: option.label.toLowerCase() })}
+            />
+          </View>
 
-          <TextInput
-            placeholder="Primary impression"
-            onChangeText={text => this.setState({ primaryImpression: text })}
-          />
+          <View style={styles.container}>
+            <TextInput
+              placeholder="Primary impression"
+              onChangeText={text => this.setState({ primaryImpression: text })}
+            />
+          </View>
 
-          <TextInput
-            placeholder="Primary symptom"
-            onChangeText={text => this.setState({ primarySymptom: text })}
-          />
+          <View style={styles.container}>
+            <TextInput
+              placeholder="Primary symptom"
+              onChangeText={text => this.setState({ primarySymptom: text })}
+            />
+          </View>
 
-          <TextInput
-            keyboardType="number-pad"
-            placeholder="RR"
-            onChangeText={text => this.setState({ rr: text })}
-          />
+          <View style={styles.container}>
+            <TextInput
+              keyboardType="number-pad"
+              placeholder="RR"
+              onChangeText={text => this.setState({ rr: text })}
+            />
+          </View>
 
-          <TextInput
-            keyboardType="number-pad"
-            placeholder="Pulse"
-            onChangeText={text => this.setState({ pulse: text })}
-          />
+          <View style={styles.container}>
+            <TextInput
+              keyboardType="number-pad"
+              placeholder="Pulse"
+              onChangeText={text => this.setState({ pulse: text })}
+            />
+          </View>
 
-          <TextInput
-            keyboardType="number-pad"
-            placeholder="Capillary refill"
-            onChangeText={text => this.setState({ capRefill: text })}
-          />
+          <View style={styles.container}>
+            <TextInput
+              keyboardType="number-pad"
+              placeholder="Capillary refill"
+              onChangeText={text => this.setState({ capRefill: text })}
+            />
+          </View>
 
-          <ModalSelector
-            data={commands}
-            initValue="Follows commands?"
-            onChange={option =>
-              this.setState({ followCommand: option.label.toLowerCase() })}
-          />
+          <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Follows commands?</Text>
+            <ModalSelector
+              data={commands}
+              initValue="Follows commands?"
+              onChange={option =>
+                this.setState({ followCommand: option.label.toLowerCase() })}
+            />
+          </View>
 
-          <TextInput
-            placeholder="Patient Name"
-            onChangeText={text => this.setState({ name: text })}
-          />
+          <View style={styles.container}>
+            <TextInput
+              placeholder="Patient Name"
+              onChangeText={text => this.setState({ name: text })}
+            />
+          </View>
+
+          <View style={styles.container}>
+            <Button
+              onPress={() => this.setData(this.state)}
+              title="Submit"
+              color="red"
+            />
+          </View>
         </View>
       </ScrollView>
     );
@@ -154,9 +189,11 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexDirection: "column",
     backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 10,
+    padding: 20
   }
 });
