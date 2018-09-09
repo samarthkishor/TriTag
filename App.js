@@ -90,6 +90,40 @@ export default class App extends React.Component {
       { key: 2, label: "Other" }
     ];
     const commands = [{ key: 0, label: "Yes" }, { key: 1, label: "No" }];
+    const primaryImpressions = [
+      { key: 0, label: "Abdominal pain/problems" },
+      { key: 1, label: "Airway Issues" },
+      { key: 2, label: "Altered level of consciousness" },
+      { key: 3, label: "Behavioral/psychiatric disorder" },
+      { key: 4, label: "Cardiac Issues" },
+      { key: 5, label: "Obvious death" },
+      { key: 6, label: "Poisoning/drug ingestion" },
+      { key: 7, label: "Syncope/fainting" },
+      { key: 8, label: "Traumatic injury" },
+      { key: 9, label: "Not applicable" },
+      { key: 10, label: "Not available" },
+      { key: 11, label: "Not known" },
+      { key: 12, label: "Not recorded" },
+      { key: 13, label: "Not reporting" }
+    ];
+    const primarySymptoms = [
+      { key: 0, label: "Bleeding" },
+      { key: 1, label: "Breathing problem" },
+      { key: 2, label: "Change in responsiveness" },
+      { key: 3, label: "Death" },
+      { key: 4, label: "Mental/psych" },
+      { key: 5, label: "Nausea/vomiting" },
+      { key: 6, label: "Pain" },
+      { key: 7, label: "Swelling" },
+      { key: 8, label: "Transport only" },
+      { key: 9, label: "Weakness" },
+      { key: 10, label: "Wound" },
+      { key: 11, label: "None" },
+      { key: 12, label: "Not applicable" },
+      { key: 13, label: "Not known" },
+      { key: 14, label: "Not recorded" },
+      { key: 15, label: "Not reporting" }
+    ];
 
     return (
       <ScrollView>
@@ -118,19 +152,23 @@ export default class App extends React.Component {
 
           <View style={styles.container}>
             <Text style={{ paddingBottom: 10 }}>Primary impression</Text>
-            <TextInput
-              placeholder="Primary impression"
+            <ModalSelector
+              data={primaryImpressions}
+              initValue="select primary impression"
               value={this.state.primaryImpression.toString()}
-              onChangeText={text => this.setState({ primaryImpression: text })}
+              onChange={option =>
+                this.setState({ primaryImpression: option.label })}
             />
           </View>
 
           <View style={styles.container}>
             <Text style={{ paddingBottom: 10 }}>Primary Symptom</Text>
-            <TextInput
-              placeholder="Primary symptom"
+            <ModalSelector
+              data={primarySymptoms}
+              initValue="select primary symptom"
               value={this.state.primarySymptom.toString()}
-              onChangeText={text => this.setState({ primarySymptom: text })}
+              onChange={option =>
+                this.setState({ primarySymptom: option.label })}
             />
           </View>
 
@@ -168,7 +206,7 @@ export default class App extends React.Component {
             <Text style={{ paddingBottom: 10 }}>Follows commands?</Text>
             <ModalSelector
               data={commands}
-              initValue="Follows commands?"
+              initValue="yes or no"
               value={this.state.followCommand.toString()}
               onChange={option =>
                 this.setState({ followCommand: option.label.toLowerCase() })}
