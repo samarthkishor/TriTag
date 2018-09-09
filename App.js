@@ -99,6 +99,7 @@ export default class App extends React.Component {
             <ModalSelector
               data={ages}
               initValue="select age"
+              value={this.state.age.toString()}
               onChange={option =>
                 this.setState({ age: option.label.toLowerCase() })}
             />
@@ -109,45 +110,56 @@ export default class App extends React.Component {
             <ModalSelector
               data={sexes}
               initValue="select sex"
+              value={this.state.sex.toString()}
               onChange={option =>
                 this.setState({ sex: option.label.toLowerCase() })}
             />
           </View>
 
           <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Primary impression</Text>
             <TextInput
               placeholder="Primary impression"
+              value={this.state.primaryImpression.toString()}
               onChangeText={text => this.setState({ primaryImpression: text })}
             />
           </View>
 
           <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Primary Symptom</Text>
             <TextInput
               placeholder="Primary symptom"
+              value={this.state.primarySymptom.toString()}
               onChangeText={text => this.setState({ primarySymptom: text })}
             />
           </View>
 
           <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>RR</Text>
             <TextInput
               keyboardType="number-pad"
               placeholder="RR"
+              value={this.state.rr.toString()}
               onChangeText={text => this.setState({ rr: text })}
             />
           </View>
 
           <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Pulse</Text>
             <TextInput
               keyboardType="number-pad"
               placeholder="Pulse"
+              value={this.state.pulse.toString()}
               onChangeText={text => this.setState({ pulse: text })}
             />
           </View>
 
           <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Capillary Refill</Text>
             <TextInput
               keyboardType="number-pad"
               placeholder="Capillary refill"
+              value={this.state.capRefill.toString()}
               onChangeText={text => this.setState({ capRefill: text })}
             />
           </View>
@@ -157,21 +169,39 @@ export default class App extends React.Component {
             <ModalSelector
               data={commands}
               initValue="Follows commands?"
+              value={this.state.followCommand.toString()}
               onChange={option =>
                 this.setState({ followCommand: option.label.toLowerCase() })}
             />
           </View>
 
           <View style={styles.container}>
+            <Text style={{ paddingBottom: 10 }}>Patient Name</Text>
             <TextInput
               placeholder="Patient Name"
+              value={this.state.name.toString()}
               onChangeText={text => this.setState({ name: text })}
             />
           </View>
 
           <View style={styles.container}>
             <Button
-              onPress={() => this.setData(this.state)}
+              onPress={() =>
+                this.setData(this.state).then(
+                  this.setState({
+                    age: "",
+                    sex: "",
+                    primaryImpression: "",
+                    primarySymptom: "",
+                    rr: 0,
+                    pulse: 0,
+                    capRefill: 0,
+                    followCommand: "",
+                    name: "",
+                    score: 0.0,
+                    ambulance: ""
+                  })
+                )}
               title="Submit"
               color="red"
             />
@@ -189,6 +219,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     margin: 10,
-    padding: 20
+    padding: 15
   }
 });
