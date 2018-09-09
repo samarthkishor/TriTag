@@ -61,12 +61,13 @@ export default class App extends React.Component {
    * Add patient data to the database
    */
   setData(patient) {
+    console.log("patient:", patient);
     this.setState({
       score: this.calcSeverity(
         patient.age,
-        patient.pulse,
-        patient.rr,
-        patient.capRefill,
+        Number(patient.pulse),
+        Number(patient.rr),
+        Number(patient.capRefill),
         patient.primaryImpression
       )
     });
@@ -88,9 +89,9 @@ export default class App extends React.Component {
           name: patient.name,
           score: this.calcSeverity(
             patient.age,
-            patient.pulse,
-            patient.rr,
-            patient.capRefill,
+            Number(patient.pulse),
+            Number(patient.rr),
+            Number(patient.capRefill),
             patient.primaryImpression
           ),
           ambulance: patient.ambulance
@@ -368,7 +369,7 @@ export default class App extends React.Component {
             <Button
               onPress={() => {
                 this.setData(this.state).then(() => {
-                  Alert.alert("Severity Score:", this.state.score);
+                  Alert.alert("Severity Score:", this.state.score.toString());
                   this.setState({
                     age: "",
                     sex: "",
