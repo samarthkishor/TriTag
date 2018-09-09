@@ -11,16 +11,24 @@ import {
 import ModalSelector from "react-native-modal-selector";
 import firebase from "firebase";
 import hash from "object-hash";
+import {
+  API_KEY,
+  AUTH_DOMAIN,
+  DATABASE_URL,
+  PROJECT_ID,
+  STORAGE_BUCKET,
+  MESSAGING_SENDER_ID
+} from "react-native-dotenv";
 
 export default class App extends React.Component {
   componentWillMount() {
     firebase.initializeApp({
-      apiKey: "AIzaSyDJsGaN0_TqcQEpCSj3Yo8Pg02OAk1Bc7A",
-      authDomain: "medhacks2018.firebaseapp.com",
-      databaseURL: "https://medhacks2018.firebaseio.com",
-      projectId: "medhacks2018",
-      storageBucket: "medhacks2018.appspot.com",
-      messagingSenderId: "819533736164"
+      apiKey: API_KEY,
+      authDomain: AUTH_DOMAIN,
+      databaseURL: DATABASE_URL,
+      projectId: PROJECT_ID,
+      storageBucket: STORAGE_BUCKET,
+      messagingSenderId: MESSAGING_SENDER_ID
     });
   }
 
@@ -75,7 +83,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     const ages = [
       { key: 0, label: "Toddler" },
       { key: 1, label: "School" },
@@ -101,10 +108,7 @@ export default class App extends React.Component {
       { key: 7, label: "Syncope/fainting" },
       { key: 8, label: "Traumatic injury" },
       { key: 9, label: "Not applicable" },
-      { key: 10, label: "Not available" },
-      { key: 11, label: "Not known" },
-      { key: 12, label: "Not recorded" },
-      { key: 13, label: "Not reporting" }
+      { key: 11, label: "Not known" }
     ];
     const primarySymptoms = [
       { key: 0, label: "Bleeding" },
@@ -120,9 +124,7 @@ export default class App extends React.Component {
       { key: 10, label: "Wound" },
       { key: 11, label: "None" },
       { key: 12, label: "Not applicable" },
-      { key: 13, label: "Not known" },
-      { key: 14, label: "Not recorded" },
-      { key: 15, label: "Not reporting" }
+      { key: 13, label: "Not known" }
     ];
 
     return (
