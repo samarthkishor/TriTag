@@ -74,11 +74,6 @@ export default class App extends React.Component {
     });
   }
 
-  ree(patient) {
-    console.log(patient);
-    console.log("reeee");
-  }
-
   render() {
     console.log(this.state);
     const ages = [
